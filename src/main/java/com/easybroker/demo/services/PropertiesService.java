@@ -48,15 +48,8 @@ public class PropertiesService {
 	public Properties getPropertiesEndpoint(
 			@RequestParam(defaultValue = "https://api.stagingeb.com/v1/properties") String url,
 			@RequestParam(required = false) String page) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-		headers.add("x-authorization", "l7u502p8v46ba3ppgvj5y2aad50lb9");
-		HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-		Properties properties = restTemplate.exchange(ObjectUtils.isEmpty(page) ?
-						url : new StringBuilder().append(url).append("?page=").append(page).toString(),
-				HttpMethod.GET, entity, Properties.class).getBody();
-
+		Properties properties = getPropertiesList(ObjectUtils.isEmpty(page) ?
+						url : new StringBuilder().append(url).append("?page=").append(page).toString());
 		properties.getPagination().setNextPage(
 				StringUtils.replace(properties.getPagination().getNextPage(),
 						"https://api.stagingeb.com/v1", "http://localhost:8080"));
