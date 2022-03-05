@@ -1,8 +1,8 @@
 package com.easybroker.demo;
 
-import com.easybroker.demo.beans.Pagination;
-import com.easybroker.demo.beans.Properties;
-import com.easybroker.demo.beans.Property;
+import com.easybroker.demo.entities.Pagination;
+import com.easybroker.demo.entities.Properties;
+import com.easybroker.demo.entities.Property;
 import com.easybroker.demo.services.PropertiesService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -33,7 +33,7 @@ class PropertiesApplicationTests {
 	private PropertiesService propertiesService;
 
 	@Test
-	public void testGetProperties() throws Exception {
+	public void testGetProperties() {
 		Property property = new Property();
 		property.setTitle("title");
 
@@ -54,7 +54,7 @@ class PropertiesApplicationTests {
 				ArgumentMatchers.<Class<Properties>>any()))
 				.thenReturn(myEntity);
 
-		Properties res = propertiesService.getPropertiesList("", propertiesService.getHeaders());
+		Properties res = propertiesService.getPropertiesList("https://api.stagingeb.com/v1/properties", propertiesService.getHeaders());
 		assertEquals(properties.getContent().get(0).getTitle(), res.getContent().get(0).getTitle());
 		assertEquals(properties.getPagination().getNextPage(), res.getPagination().getNextPage());
 	}

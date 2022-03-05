@@ -1,6 +1,6 @@
 package com.easybroker.demo.services;
 
-import com.easybroker.demo.beans.Properties;
+import com.easybroker.demo.entities.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -9,16 +9,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-@RestController
+@Service
 @Profile("!test")
 public class PropertiesService {
 
@@ -49,19 +45,6 @@ public class PropertiesService {
 	public Properties getPropertiesList(String url, HttpEntity<String> headers) {
 		return restTemplate.exchange(url,
 				HttpMethod.GET, headers, Properties.class).getBody();
-	}
-
-	@RequestMapping(value = "/properties")
-	public Properties getPropertiesEndpoint(@RequestParam(required = false) String page) {
-		String url = "https://api.stagingeb.com/v1/properties";
-		Properties properties = getPropertiesList(ObjectUtils.isEmpty(page) ?
-				url : new StringBuilder().append(url).append("?page=").append(page).toString(), getHeaders());
-		properties.getContent().forEach(property -> System.out.println(property.getTitle()));
-		properties.getPagination().setNextPage(
-				StringUtils.replace(properties.getPagination().getNextPage(),
-						"https://api.stagingeb.com/v1", "http://localhost:8080"));
-
-		return properties;
 	}
 
 }
